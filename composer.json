@@ -1,5 +1,5 @@
 {
-    "name": "zhihe/restricted-posts",
+    "name": "hertz-dev/restricted-posts",
     "description": "Allow post authors to mark their posts as restricted content",
     "keywords": [
         "flarum",
@@ -16,18 +16,18 @@
     },
     "authors": [
         {
-            "name": "Zhihe Team",
-            "email": "dev@zhihe.com"
+            "name": "Hertz",
+            "role": "Developer"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Zhihe\\RestrictedPosts\\": "src/"
+            "Hertz\\RestrictedPosts\\": "src/"
         }
     },
     "extra": {
         "flarum-extension": {
-            "title": "Zhihe Restricted Posts",
+            "title": "Restricted Posts",
             "category": "feature",
             "icon": {
                 "name": "fas fa-lock",

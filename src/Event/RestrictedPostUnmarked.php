@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhihe\RestrictedPosts\Event;
+namespace Hertz\RestrictedPosts\Event;
 
 use Flarum\Post\Post;
 

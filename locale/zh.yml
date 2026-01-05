@@ -1,4 +1,4 @@
-zhihe-restricted-posts:
+hertz-dev-restricted-posts:
   forum:
     restricted_post: "限制内容"
     mark_restricted: "标记为限制内容"

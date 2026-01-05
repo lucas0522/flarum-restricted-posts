@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@zhihe/restricted-posts",
+  "name": "@hertz-dev/restricted-posts",
   "dependencies": {
     "flarum-webpack-config": "^2.0.0",
     "webpack": "^5.76.0",

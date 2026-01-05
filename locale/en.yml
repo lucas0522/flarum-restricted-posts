@@ -1,4 +1,4 @@
-zhihe-restricted-posts:
+hertz-dev-restricted-posts:
   forum:
     restricted_post: "Restricted Post"
     mark_restricted: "Mark as Restricted"

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhihe\RestrictedPosts\Api\Controller;
+namespace Hertz\RestrictedPosts\Api\Controller;
 
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
@@ -10,7 +10,7 @@ use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 use Illuminate\Validation\ValidationException;
-use Zhihe\RestrictedPosts\Event\RestrictedPostMarked;
+use Hertz\RestrictedPosts\Event\RestrictedPostMarked;
 
 class MarkRestrictedController extends AbstractCreateController
 {

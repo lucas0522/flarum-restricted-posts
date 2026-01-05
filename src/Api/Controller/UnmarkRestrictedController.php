@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhihe\RestrictedPosts\Api\Controller;
+namespace Hertz\RestrictedPosts\Api\Controller;
 
 use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Http\RequestUtil;
@@ -9,7 +9,7 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Illuminate\Validation\ValidationException;
-use Zhihe\RestrictedPosts\Event\RestrictedPostUnmarked;
+use Hertz\RestrictedPosts\Event\RestrictedPostUnmarked;
 
 class UnmarkRestrictedController extends AbstractDeleteController
 {
