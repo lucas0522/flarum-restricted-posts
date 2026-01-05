@@ -23,8 +23,8 @@ A Flarum extension that allows post authors to mark their posts as restricted co
 ## 🚀 Installation
 
 ```bash
-composer require zhihe/restricted-posts
-php flarum extension:enable zhihe-restricted-posts
+composer require hertz-dev/restricted-posts
+php flarum extension:enable hertz-dev-restricted-posts
 php flarum migrate
 ```
 
