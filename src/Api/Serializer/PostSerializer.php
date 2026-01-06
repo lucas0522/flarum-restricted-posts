@@ -21,8 +21,8 @@ class PostSerializer
 
         // 3. 内容隐藏逻辑 (之前写过的)
         if ($model->is_restricted && !$serializer->getActor()->can('viewRestrictedContent', $model)) {
-            $attributes['content'] = '<p>[' . $serializer->getTranslator()->trans('zhihe-restricted-posts.forum.restricted_content_hidden') . ']</p>';
-            $attributes['contentHtml'] = '<div class="restricted-content-placeholder"><p>[' . $serializer->getTranslator()->trans('zhihe-restricted-posts.forum.restricted_content_hidden') . ']</p></div>';
+            $attributes['content'] = '<p>[' . $serializer->getTranslator()->trans('hertz-dev-restricted-posts.forum.restricted_content_hidden') . ']</p>';
+            $attributes['contentHtml'] = '<div class="restricted-content-placeholder"><p>[' . $serializer->getTranslator()->trans('hertz-dev-restricted-posts.forum.restricted_content_hidden') . ']</p></div>';
         }
 
         return $attributes;

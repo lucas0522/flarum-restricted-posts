@@ -5,3 +5,9 @@ hertz-dev-restricted-posts:
     unmark_restricted: "取消限制标记"
     restricted_checkbox: "限制内容"
     restricted_badge: "此帖子包含限制内容"
+    # 👇 必须补上这一行，注意缩进
+    restricted_content_hidden: "此处为限制内容，请登录或获取权限后查看"
+  admin:
+    permissions:
+      view_restricted_content: "查看标记的受限内容"
+      mark_restricted_posts: "发布或标记受限内容"

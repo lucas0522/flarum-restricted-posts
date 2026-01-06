@@ -9,7 +9,7 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Illuminate\Validation\ValidationException;
+use Flarum\User\Exception\PermissionDeniedException; // 引入权限异常
 use Hertz\RestrictedPosts\Event\RestrictedPostMarked;
 
 class MarkRestrictedController extends AbstractCreateController
@@ -31,12 +31,13 @@ class MarkRestrictedController extends AbstractCreateController
         return $this->db->transaction(function () use ($actor, $postId) {
             $post = Post::findOrFail($postId);
             
-            // Only post author can mark their own posts as restricted
-            if ($actor->id !== $post->user_id) {
-                throw new ValidationException(['error' => 'Only post author can mark posts as restricted']);
+            // 【修正】: 使用 can() 方法检查权限，而不是硬编码对比 ID
+            // 这样我们在 Policy 里写的逻辑（版主可操作）才会生效
+            if ($actor->cannot('markRestricted', $post)) {
+                throw new PermissionDeniedException();
             }
 
-            // Skip if already marked as restricted
+            // 如果已经是受限状态，直接返回
             if ($post->is_restricted) {
                 return $post;
             }
@@ -44,7 +45,6 @@ class MarkRestrictedController extends AbstractCreateController
             $post->is_restricted = true;
             $post->save();
 
-            // Emit event for extensibility
             event(new RestrictedPostMarked($post));
 
             return $post;

@@ -8,7 +8,7 @@ use Flarum\Post\Post;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Illuminate\Validation\ValidationException;
+use Flarum\User\Exception\PermissionDeniedException; // 引入权限异常
 use Hertz\RestrictedPosts\Event\RestrictedPostUnmarked;
 
 class UnmarkRestrictedController extends AbstractDeleteController
@@ -28,12 +28,11 @@ class UnmarkRestrictedController extends AbstractDeleteController
         return $this->db->transaction(function () use ($actor, $postId) {
             $post = Post::findOrFail($postId);
             
-            // Only post author can unmark their own posts
-            if ($actor->id !== $post->user_id) {
-                throw new ValidationException(['error' => 'Only post author can unmark posts']);
+            // 【修正】: 同样改为检查权限
+            if ($actor->cannot('markRestricted', $post)) {
+                throw new PermissionDeniedException();
             }
 
-            // Skip if not marked as restricted
             if (!$post->is_restricted) {
                 return;
             }
@@ -41,7 +40,6 @@ class UnmarkRestrictedController extends AbstractDeleteController
             $post->is_restricted = false;
             $post->save();
 
-            // Emit event for extensibility
             event(new RestrictedPostUnmarked($post));
         });
     }

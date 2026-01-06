@@ -1,11 +1,11 @@
 <?php
 
 use Flarum\Extend;
-use Zhihe\RestrictedPosts\Api\Controller\MarkRestrictedController;
-use Zhihe\RestrictedPosts\Api\Controller\UnmarkRestrictedController;
-use Zhihe\RestrictedPosts\Api\Serializer\PostSerializer;
-use Zhihe\RestrictedPosts\Listener\ProcessRestrictedPostData;
-use Zhihe\RestrictedPosts\Access\PostPolicy; // 引入 Policy
+use Hertz\RestrictedPosts\Api\Controller\MarkRestrictedController;
+use Hertz\RestrictedPosts\Api\Controller\UnmarkRestrictedController;
+use Hertz\RestrictedPosts\Api\Serializer\PostSerializer;
+use Hertz\RestrictedPosts\Listener\ProcessRestrictedPostData;
+use Hertz\RestrictedPosts\Access\PostPolicy; // 引入 Policy
 use Flarum\Post\Post; // 引入 Post 模型
 
 return [
@@ -28,6 +28,9 @@ return [
     (new Extend\Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
         ->css(__DIR__.'/less/forum.less'),
+    
+    (new Extend\Frontend('admin'))
+        ->js(__DIR__.'/js/dist/admin.js'),
 
     (new Extend\Locales(__DIR__.'/locale')),
 
