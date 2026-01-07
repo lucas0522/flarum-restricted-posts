@@ -1,12 +1,13 @@
-// Restricted badge in post header
+// Restricted badge in post header - positioned to far right (like primary badge)
 .Post-header {
   position: relative;
+  
   .item-restrictedBadge {
     position: absolute;
     top: 50%;
-    right: 32px;
+    right: 32px; // Leave space for primary badge (20px width + 8px margin + 4px spacing)
     transform: translateY(-50%);
-
+    
     .RestrictedBadge {
       display: inline-flex;
       align-items: center;
@@ -31,7 +32,7 @@
   // Adjust primary badge position when both badges are present
   .item-restrictedBadge ~ .item-primaryBadge {
     .PrimaryBadge {
-      // Primary badge stays at right
+      // Primary badge stays at right: 8px (from zhihe-primary-posts CSS)
     }
   }
 }
@@ -48,7 +49,7 @@
 
 // Style for restricted checkbox in composer
 .Form-group .checkbox {
-  margin-right: 16px;
+  margin-right: 16px; // Add spacing between checkboxes
   
   input[type="checkbox"]:checked + span::after {
     content: " 🔒";
@@ -61,6 +62,7 @@
     display: inline-block;
     margin-right: 16px;
     margin-bottom: 0;
+    
     &:last-child {
       margin-right: 0;
     }
@@ -68,14 +70,13 @@
 }
 
 // ----------------------------------------------------------------
-// 👇 受限内容提示框样式 (双色版)
+// 👇 补全：原扩展缺失的“内容被隐藏”提示框样式
 // ----------------------------------------------------------------
 
-// 1. 基础样式 (默认是 VIP 橙色风格)
 .RestrictedWarning {
-  background-color: #fef5e7; // 橙色背景
-  border: 1px solid #f39c12; // 橙色边框
-  color: #d35400;            // 橙褐色文字
+  background-color: #fef5e7; // 极淡的橙色背景 (配合原扩展的主色调)
+  border: 1px solid #f39c12; // 使用原扩展定义的橙色 (#f39c12) 作为边框
+  color: #d35400;            // 深橙褐色文字
   
   border-radius: 4px;
   padding: 15px;
@@ -85,10 +86,11 @@
   font-size: 14px;
   line-height: 1.5;
 
+  // 锁图标
   i {
     font-size: 18px;
     margin-right: 12px;
-    color: #f39c12; // 橙色图标
+    color: #f39c12; // 图标也用原版橙色
   }
 
   span {
@@ -102,92 +104,5 @@
     &:hover {
       color: #d35400;
     }
-  }
-
-  // 2. 🔵 登录可见样式变体 (蓝色风格)
-  // 当 HTML 是 <div class="RestrictedWarning RestrictedWarning--login"> 时生效
-  &.RestrictedWarning--login {
-    background-color: #e8f6f3; // 很浅的蓝色/青色背景
-    border-color: #3498db;     // 经典的 Flarum 蓝
-    color: #2c3e50;            // 深灰蓝色文字，看着舒服
-    
-    i {
-      color: #3498db;          // 蓝色图标
-    }
-    
-    a {
-      color: #2980b9;
-      &:hover {
-        color: #1a5276;
-      }
-    }
-  }
-}
-
-// 👇 【稳定版】纯 CSS 绘制箭头 (修复图标消失问题)
-.RestrictionSelect {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 20px;
-  position: relative;
-  height: 20px;
-
-  // 1. 隐藏 Flarum 自带图标
-  .Select-caret {
-    display: none !important;
-  }
-
-  // 2. 输入框样式
-  select.Select-input {
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none;
-    
-    height: 20px !important;
-    line-height: 20px !important;
-    margin: 0;
-    
-    // 强制右侧内边距 (给 CSS 箭头留位置)
-    padding: 0 25px 0 0 !important; 
-    
-    font-size: 14px;
-    font-weight: bold;
-    color: #667c99;
-    cursor: pointer;
-    
-    transform: translateY(-1px);
-
-    // 悬停时文字变色
-    &:hover {
-      color: #f39c12;
-    }
-  }
-
-  // 3. 纯 CSS 箭头 (无需字体，绝对稳定)
-  &::after {
-    content: "";              // 内容为空
-    position: absolute;
-    right: 8px;               // 距离右边 8px，位置更自然
-    top: 50%;
-    transform: translateY(-50%); // 垂直居中
-    pointer-events: none;     // 鼠标穿透
-    
-    // 🔺 画一个向下的小三角形
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid #667c99; // 默认灰色
-    
-    opacity: 0.7;
-  }
-  
-  // 悬停时箭头变色
-  &:hover::after {
-    border-top-color: #f39c12; // 变成橙色
-    opacity: 1;
   }
 }
