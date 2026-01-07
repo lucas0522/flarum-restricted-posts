@@ -1,13 +1,19 @@
 hertz-dev-restricted-posts:
   forum:
     restricted_post: "限制内容"
-    mark_restricted: "标记为限制内容"
-    unmark_restricted: "取消限制标记"
-    restricted_checkbox: "限制内容"
+    mark_restricted: "标记为权限组内容"
+    unmark_restricted: "取消限制"
+    restricted_checkbox: "限制内容" # 这个可能用不到了，但先留着
     restricted_badge: "此帖子包含限制内容"
-    # 👇 必须补上这一行，注意缩进
-    restricted_content_hidden: "此处为限制内容，请登录或获取权限后查看"
+    restricted_content_hidden: "此处为限制内容，请获取权限后查看"
+    
+    # 👇 新增的下拉菜单选项翻译
+    options:
+      public: "公开内容"
+      login: "登录可见"
+      group: "授权可见"
+
   admin:
     permissions:
-      view_restricted_content: "查看标记的受限内容"
+      view_restricted_content: "查看权限组受限内容"
       mark_restricted_posts: "发布或标记受限内容"

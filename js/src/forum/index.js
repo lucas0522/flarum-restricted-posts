@@ -3,16 +3,18 @@ import app from 'flarum/forum/app';
 import Post from 'flarum/forum/components/Post';
 import CommentPost from 'flarum/forum/components/CommentPost';
 import Button from 'flarum/common/components/Button';
+import Select from 'flarum/common/components/Select'; // 引入 Select 组件
 import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
 import ReplyComposer from 'flarum/forum/components/ReplyComposer';
 import PostControls from 'flarum/forum/utils/PostControls';
 
 app.initializers.add('hertz-dev-restricted-posts', () => {
-  // 1. [保持不变] 给帖子头部添加“锁”图标
+  
+  // 1. [保持不变] 帖子右上角的锁图标
   extend(CommentPost.prototype, 'headerItems', function (items) {
     const post = this.attrs.post;
-    
-    if (post && post.attribute('isRestricted')) {
+    // 只要有 restrictionType 或者 isRestricted 为真，就显示图标
+    if (post && (post.attribute('restrictionType') || post.attribute('isRestricted'))) {
       items.add('restrictedBadge',
         m('span', {
           className: 'RestrictedBadge',
@@ -25,10 +27,9 @@ app.initializers.add('hertz-dev-restricted-posts', () => {
     }
   });
 
-  // 2. [修改] 帖子下拉菜单的操作按钮
+  // 2. [临时保持不变] 帖子下拉菜单的操作按钮 (针对已有帖子)
+  // 目前这个按钮点击后默认设为 "group" (VIP) 类型，后续我们可以把它改成弹窗选择
   extend(PostControls, 'userControls', function (items, post, context) {
-    // 关键修改：不再检查 user.id === post.user.id
-    // 而是检查我们在 PHP PostSerializer 中传过来的 'canMarkRestricted' 属性
     if (!post.attribute('canMarkRestricted')) return;
 
     if (post.attribute('isRestricted')) {
@@ -50,15 +51,16 @@ app.initializers.add('hertz-dev-restricted-posts', () => {
     }
   });
 
-  // 3. [保持不变] 给 Post 原型添加 API 请求方法
   extend(Post.prototype, 'oninit', function () {
     this.markAsRestricted = () => {
       const post = this.attrs.post;
+      // 默认按钮行为：标记为 VIP (group)
       app.request({
         method: 'POST',
-        url: app.forum.attribute('apiUrl') + '/posts/' + post.id() + '/mark-restricted'
+        url: app.forum.attribute('apiUrl') + '/posts/' + post.id() + '/mark-restricted',
+        body: { restrictionType: 'group' } // 默认设为 VIP
       }).then(() => {
-        post.pushAttributes({ isRestricted: true });
+        post.pushAttributes({ isRestricted: true, restrictionType: 'group' });
         m.redraw();
       });
     };
@@ -69,64 +71,61 @@ app.initializers.add('hertz-dev-restricted-posts', () => {
         method: 'DELETE',
         url: app.forum.attribute('apiUrl') + '/posts/' + post.id() + '/unmark-restricted'
       }).then(() => {
-        post.pushAttributes({ isRestricted: false });
+        post.pushAttributes({ isRestricted: false, restrictionType: null });
         m.redraw();
       });
     };
   });
 
-  // 4. [修改] 发布主题时的勾选框 (Composer)
+  // 3. [关键修改] 定义下拉菜单的选项
+  const getRestrictionOptions = () => ({
+    '': app.translator.trans('hertz-dev-restricted-posts.forum.options.public'), // 默认空值 = 公开
+    'login': app.translator.trans('hertz-dev-restricted-posts.forum.options.login'),
+    'group': app.translator.trans('hertz-dev-restricted-posts.forum.options.group')
+  });
+
+  // 4. [关键修改] 发布主题时的下拉菜单 (Composer)
   extend(DiscussionComposer.prototype, 'headerItems', function (items) {
-    // 关键修改：检查全局权限 'canMarkRestrictedPosts' (来自 extend.php)
     if (!app.forum.attribute('canMarkRestrictedPosts')) return;
 
-    items.add('isRestricted',
-      m('div', { className: 'Form-group' }, [
-        m('label', { className: 'checkbox' }, [
-          m('input', {
-            type: 'checkbox',
-            checked: this.composer.fields.isRestricted || false,
-            onchange: (e) => {
-              this.composer.fields.isRestricted = e.target.checked;
-            }
-          }),
-          ' ',
-          app.translator.trans('hertz-dev-restricted-posts.forum.restricted_checkbox')
-        ])
+    items.add('restrictionType',
+      m('div', { className: 'Form-group RestrictionSelect' }, [
+        Select.component({
+          options: getRestrictionOptions(),
+          value: this.composer.fields.restrictionType || '', // 绑定值
+          onchange: (value) => {
+            this.composer.fields.restrictionType = value;
+          }
+        })
       ]),
       9
     );
   });
 
-  // 5. [修改] 回复时的勾选框 (Reply Composer)
+  // 5. [关键修改] 回复时的下拉菜单 (Reply Composer)
   extend(ReplyComposer.prototype, 'headerItems', function (items) {
-    // 同样检查权限
     if (!app.forum.attribute('canMarkRestrictedPosts')) return;
 
-    items.add('isRestricted',
-      m('div', { className: 'Form-group' }, [
-        m('label', { className: 'checkbox' }, [
-          m('input', {
-            type: 'checkbox',
-            checked: this.composer.fields.isRestricted || false,
-            onchange: (e) => {
-              this.composer.fields.isRestricted = e.target.checked;
-            }
-          }),
-          ' ',
-          app.translator.trans('hertz-dev-restricted-posts.forum.restricted_checkbox')
-        ])
+    items.add('restrictionType',
+      m('div', { className: 'Form-group RestrictionSelect' }, [
+        Select.component({
+          options: getRestrictionOptions(),
+          value: this.composer.fields.restrictionType || '',
+          onchange: (value) => {
+            this.composer.fields.restrictionType = value;
+          }
+        })
       ]),
       9
     );
   });
 
-  // 6. [保持不变] 传输数据逻辑
+  // 6. [关键修改] 数据传输：发送 restrictionType 给后端
   extend(DiscussionComposer.prototype, 'data', function (data) {
-    data.isRestricted = this.composer.fields.isRestricted || false;
+    data.restrictionType = this.composer.fields.restrictionType || null;
   });
   
   extend(ReplyComposer.prototype, 'data', function (data) {
-    data.isRestricted = this.composer.fields.isRestricted || false;
+    data.restrictionType = this.composer.fields.restrictionType || null;
   });
 });
