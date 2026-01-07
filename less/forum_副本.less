@@ -1,0 +1,108 @@
+// Restricted badge in post header - positioned to far right (like primary badge)
+.Post-header {
+  position: relative;
+  
+  .item-restrictedBadge {
+    position: absolute;
+    top: 50%;
+    right: 32px; // Leave space for primary badge (20px width + 8px margin + 4px spacing)
+    transform: translateY(-50%);
+    
+    .RestrictedBadge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: #f39c12;
+      color: white;
+      border-radius: 3px;
+      cursor: help;
+      
+      i {
+        font-size: 11px;
+      }
+      
+      &:hover {
+        background: #e67e22;
+      }
+    }
+  }
+  
+  // Adjust primary badge position when both badges are present
+  .item-restrictedBadge ~ .item-primaryBadge {
+    .PrimaryBadge {
+      // Primary badge stays at right: 8px (from zhihe-primary-posts CSS)
+    }
+  }
+}
+
+.Post {
+  &.Post--restricted {
+    .Post-body {
+      opacity: 0.6;
+      border-left: 3px solid #f39c12;
+      padding-left: 15px;
+    }
+  }
+}
+
+// Style for restricted checkbox in composer
+.Form-group .checkbox {
+  margin-right: 16px; // Add spacing between checkboxes
+  
+  input[type="checkbox"]:checked + span::after {
+    content: " 🔒";
+  }
+}
+
+// Ensure proper spacing between composer checkboxes
+.Composer-header {
+  .Form-group {
+    display: inline-block;
+    margin-right: 16px;
+    margin-bottom: 0;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// ----------------------------------------------------------------
+// 👇 补全：原扩展缺失的“内容被隐藏”提示框样式
+// ----------------------------------------------------------------
+
+.RestrictedWarning {
+  background-color: #fef5e7; // 极淡的橙色背景 (配合原扩展的主色调)
+  border: 1px solid #f39c12; // 使用原扩展定义的橙色 (#f39c12) 作为边框
+  color: #d35400;            // 深橙褐色文字
+  
+  border-radius: 4px;
+  padding: 15px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1.5;
+
+  // 锁图标
+  i {
+    font-size: 18px;
+    margin-right: 12px;
+    color: #f39c12; // 图标也用原版橙色
+  }
+
+  span {
+    font-weight: bold;
+  }
+
+  a {
+    color: #e67e22;
+    text-decoration: underline;
+    font-weight: bold;
+    &:hover {
+      color: #d35400;
+    }
+  }
+}
